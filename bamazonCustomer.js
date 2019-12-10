@@ -26,10 +26,10 @@ var query = "SELECT * FROM products"
 connection.query(query, function(err, res){
   if (err) throw err;
 
-  console.log("item_id   " + "product_name   " + "department   " + "price   " + "quantity")
-  console.log("-------   " + "-------------- " + "-----------  " + "-----   " + "---------" )
+  console.log("item_id   " + "product_name       " + "department   " + "price   " + "quantity")
+  console.log("-------   " + "--------------     " + "-----------  " + "-----   " + "---------" )
   for( var i = 0; i < res.length; i++){
-    console.log(i)
+    console.log(res[i].item_id + "          " + res[i].product_name)
   }
 
   // console.log(res[1].item_id)
