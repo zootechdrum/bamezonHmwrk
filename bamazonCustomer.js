@@ -20,3 +20,10 @@ var connection = mysql.createConnection({
   if (err) throw err;
   console.log("Database is connected!!");
 });
+
+var query = "SELECT * FROM products"
+
+connection.query(query, function(err, res){
+  if (err) throw err;
+  console.log(res[1].item_id)
+})
