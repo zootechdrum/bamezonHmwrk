@@ -40,7 +40,6 @@ function showTable() {
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    console.log(res)
     for (var i = 0; i < res.length; i++) {
       table.push(
         [res[i].item_id,
@@ -77,13 +76,11 @@ function whatToBuy() {
         var chosenItem;
 
         for (var i = 0; i < results.length; i++) {
-          console.log(results[i].item_id + " " + answer.id)
           if (parseInt(results[i].item_id) === parseInt(answer.id)) {
             chosenItem = results[i]
           }
 
         }
-        console.log(chosenItem)
         if (chosenItem.stock_quantity < answer.qty) {
           console.log("-----------------------------------------")
           console.log("Insufficient quantity to place your order")
