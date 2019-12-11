@@ -1,6 +1,17 @@
 var mysql  = require('mysql');
 var inquirer = require('inquirer');
+var Table = require('cli-table');
 
+var table = new Table({
+
+  chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
+  head: ['item_id','product_name','department','price','quantity']
+});
+
+ 
 //Required to connect to our database on Local server
 var connection = mysql.createConnection({
     host: "localhost",
@@ -26,11 +37,10 @@ var query = "SELECT * FROM products"
 connection.query(query, function(err, res){
   if (err) throw err;
 
-  console.log("item_id   " + "product_name       " + "department   " + "price   " + "quantity")
-  console.log("-------   " + "--------------     " + "-----------  " + "-----   " + "---------" )
+  console.log(res)
   for( var i = 0; i < res.length; i++){
-    console.log(res[i].item_id + "          " + res[i].product_name)
+    table.push([res[i].item_id])
   }
-
-  // console.log(res[1].item_id)
+  console.log(table.toString())
 })
+
