@@ -85,11 +85,58 @@ function whatToBuy() {
           console.log("-----------------------------------------")
           console.log("Insufficient quantity to place your order")
           console.log("-----------------------------------------")
+        } else {
+
+          var total =  parseInt(chosenItem.stock_quantity) - parseInt(answer.qty)
+          console.log(total)
+          // connection.query(
+          //   "UPDATE products SET ? WHERE ?", 
+          //   [
+          //     {
+          //       stock_quantity : parseInt(total)
+          //     },
+          //     {
+          //       item_id: parseInt(answer.id)
+          //     }
+          //   ],
+          //   function(error) {
+          //     if (error) throw error;
+          //   }
+          // )
+          console.log(table.toString())
         }
 
       })
   })
 }
+
+// if (chosenItem.highest_bid < parseInt(answer.bid)) {
+//   // bid was high enough, so update db, let the user know, and start over
+//   connection.query(
+//     "UPDATE auctions SET ? WHERE ?",
+//     [
+//       {
+//         highest_bid: answer.bid
+//       },
+//       {
+//         id: chosenItem.id
+//       }
+//     ],
+//     function(error) {
+//       if (error) throw err;
+//       console.log("Bid placed successfully!");
+//       start();
+//     }
+//   );
+// }
+// else {
+//   // bid wasn't high enough, so apologize and start over
+//   console.log("Your bid was too low. Try again...");
+//   start();
+// }
+// });
+// });
+// }
 
 showTable();
 
