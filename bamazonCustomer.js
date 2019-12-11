@@ -2,7 +2,10 @@ var mysql = require('mysql');
 var inquirer = require('inquirer');
 var Table = require('cli-table');
 
-var table = new Table({
+
+var table;
+function createTable() {
+ table = new Table({
 
   chars: {
     'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
@@ -12,6 +15,7 @@ var table = new Table({
   },
   head: ['item_id', 'product_name', 'department', 'price', 'quantity']
 });
+}
 
 
 //Required to connect to our database on Local server
@@ -36,10 +40,17 @@ connection.connect(function (err) {
 
 var query = "SELECT * FROM products"
 
-function showTable() {
+function displayTable() {
+  console.log(table.toString())
+}
+
+function insertTable() {
   connection.query(query, function (err, res) {
     if (err) throw err;
-
+    if (table.length > 1){
+      table = []
+      createTable()
+    }
     for (var i = 0; i < res.length; i++) {
       table.push(
         [res[i].item_id,
@@ -48,9 +59,10 @@ function showTable() {
         res[i].price,
         res[i].stock_quantity]
       )
-    }
-    console.log(table.toString())
+    
+  }
     whatToBuy()
+    displayTable()
   })
 }
 
@@ -87,28 +99,32 @@ function whatToBuy() {
           console.log("-----------------------------------------")
         } else {
 
-          var total =  parseInt(chosenItem.stock_quantity) - parseInt(answer.qty)
-          console.log(total)
-          // connection.query(
-          //   "UPDATE products SET ? WHERE ?", 
-          //   [
-          //     {
-          //       stock_quantity : parseInt(total)
-          //     },
-          //     {
-          //       item_id: parseInt(answer.id)
-          //     }
-          //   ],
-          //   function(error) {
-          //     if (error) throw error;
-          //   }
-          // )
-          console.log(table.toString())
+          var total =  chosenItem.stock_quantity - answer.qty
+          connection.query(
+            "UPDATE products SET ? WHERE ?", 
+            [
+              {
+                stock_quantity : total
+              },
+              {
+                item_id: parseInt(answer.id)
+              }
+            ],
+            function(error) {
+              if (error) throw error;
+            }
+          )
+          console.log("------------------------")
+          console.log("Order has been placed!!")
+          console.log("------------------------")
+          insertTable()
         }
 
       })
   })
 }
+createTable()
+insertTable()
 
 // if (chosenItem.highest_bid < parseInt(answer.bid)) {
 //   // bid was high enough, so update db, let the user know, and start over
@@ -138,5 +154,4 @@ function whatToBuy() {
 // });
 // }
 
-showTable();
 
