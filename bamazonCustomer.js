@@ -67,7 +67,7 @@ function insertTable() {
 }
 
 function whatToBuy() {
-  connection.query("SELECT item_id,stock_quantity FROM products", function (err, results) {
+  connection.query("SELECT item_id,stock_quantity,price FROM products", function (err, results) {
     if (err) throw err
 
     inquirer
@@ -116,8 +116,10 @@ function whatToBuy() {
           )
           console.log("------------------------")
           console.log("Order has been placed!!")
+          console.log("Your total is : $" + answer.qty * chosenItem.price + ".00 USD")
           console.log("------------------------")
           insertTable()
+
         }
 
       })
