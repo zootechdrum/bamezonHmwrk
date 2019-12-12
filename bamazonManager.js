@@ -24,7 +24,8 @@ inquirer
     {
       name : 'action',
       type: 'list',
-      choices:['1','2','3']
+      choices:['1','2','3'],
+      message: "What would you like to do?"
 
     }
   ])
