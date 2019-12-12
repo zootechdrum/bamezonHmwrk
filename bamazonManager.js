@@ -18,3 +18,16 @@ function createTable() {
   head: ['item_id', 'product_name', 'department', 'price', 'quantity']
 });
 }
+
+inquirer
+  .prompt([
+    {
+      name : 'action',
+      type: 'list',
+      choices:['1','2','3']
+
+    }
+  ])
+  .then(
+
+  )
