@@ -4,6 +4,10 @@ var Table = require('cli-table');
 
 
 var table;
+
+console.log(process.argv)
+
+
 function createTable() {
  table = new Table({
 
@@ -18,6 +22,8 @@ function createTable() {
 }
 
 
+
+
 //Required to connect to our database on Local server
 var connection = mysql.createConnection({
   host: "localhost",
@@ -27,7 +33,7 @@ var connection = mysql.createConnection({
 
   // Your username
   user: "root",
-
+  connectionLimit: 10,
   // Your password
   password: "password",
   database: "bamazon_DB"
@@ -38,7 +44,10 @@ connection.connect(function (err) {
   console.log("Database is connected!!");
 });
 
-var query = "SELECT * FROM products"
+
+
+
+var query = "SELECT * FROM products";
 
 function displayTable() {
   console.log(table.toString())
@@ -66,6 +75,9 @@ function insertTable() {
   })
 }
 
+
+
+
 function whatToBuy() {
   connection.query("SELECT item_id,stock_quantity,price FROM products", function (err, results) {
     if (err) throw err
@@ -75,16 +87,26 @@ function whatToBuy() {
         {
           name: "id",
           type: "input",
-          message: "What is the item_ID of the item you would like to purchase?",
+          message: "What is the item_ID of the item you would like to purchase? [ QUIT WITH Q ]",
+          validate: function(value) {
+            if (value !== "Q") {
+              return true;
+            }else{
+            process.exit()
+            return
+            }
+          }
         },
         {
           name: "qty",
           type: "input",
           message: "How much would you like to buy ?",
-        }
+        },
+        
       ])
 
       .then(function (answer) {
+        console.log(answer)
         var chosenItem;
 
         for (var i = 0; i < results.length; i++) {
@@ -125,35 +147,18 @@ function whatToBuy() {
       })
   })
 }
+
+// Displays message before commenting 
+// node.js quits
+process.on('exit', function(code) {
+  console.log("\r\n -------------------------------------")
+  console.log("\r\n Thank you for visiting Bamazon.")
+  console.log("\r\n Come back soon")
+  console.log("-------------------------------------")
+})
+
 createTable()
 insertTable()
 
-// if (chosenItem.highest_bid < parseInt(answer.bid)) {
-//   // bid was high enough, so update db, let the user know, and start over
-//   connection.query(
-//     "UPDATE auctions SET ? WHERE ?",
-//     [
-//       {
-//         highest_bid: answer.bid
-//       },
-//       {
-//         id: chosenItem.id
-//       }
-//     ],
-//     function(error) {
-//       if (error) throw err;
-//       console.log("Bid placed successfully!");
-//       start();
-//     }
-//   );
-// }
-// else {
-//   // bid wasn't high enough, so apologize and start over
-//   console.log("Your bid was too low. Try again...");
-//   start();
-// }
-// });
-// });
-// }
 
 
