@@ -25,7 +25,7 @@ connection.connect(function (err) {
 });
 
 
-function createTable() {
+function initTable() {
  table = new Table({
 
   chars: {
@@ -55,6 +55,21 @@ inquirer
     action(answer.action)
   })
 
+  function createTable(insertInfo) {
+    table = [];
+    initTable()
+    for (var i = 0; i < insertInfo.length; i++) {
+      table.push(
+        [insertInfo[i].item_id,
+        insertInfo[i].product_name,
+        insertInfo[i].department_name,
+        insertInfo[i].price,
+        insertInfo[i].stock_quantity]
+      )
+    
+  }
+  displayTable()
+  }
 
   function action(action) {
 
@@ -77,18 +92,7 @@ inquirer
 
     connection.query(query, function (err, res) {
       if (err) throw err;
-
-      for (var i = 0; i < res.length; i++) {
-        table.push(
-          [res[i].item_id,
-          res[i].product_name,
-          res[i].department_name,
-          res[i].price,
-          res[i].stock_quantity]
-        )
-      
-    }
-    displayTable()
+      createTable(res)
     })
   }
 
@@ -96,4 +100,8 @@ inquirer
     console.log(table.toString())
   }
 
-  createTable()
+  initTable()
+
+  function lowInv(){
+    var query = "Select * from products WHERE stock_quantity < 5"
+  }
