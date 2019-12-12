@@ -148,8 +148,7 @@ function whatToBuy() {
   })
 }
 
-// Displays message before commenting 
-// node.js quits
+// Displays message before exiting the application
 process.on('exit', function(code) {
   console.log("\r\n -------------------------------------")
   console.log("\r\n Thank you for visiting Bamazon.")

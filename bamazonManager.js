@@ -24,11 +24,32 @@ inquirer
     {
       name : 'action',
       type: 'list',
-      choices:['1','2','3'],
+      choices:[
+      'View Products for Sale',
+      'View Low Inventory',
+      'Add to Inventory'
+    ],
       message: "What would you like to do?"
-
     }
   ])
-  .then(
+  .then( function(answer) {
+    action(answer.action)
+  })
 
-  )
+
+  function action(action) {
+
+    switch(action) {
+      case 'View Products for Sale':
+      break;
+
+      case 'View Low Inventory':
+      break;
+
+      case 'Add to Inventory':
+      break;
+
+    }
+
+    console.log(action)
+  }
