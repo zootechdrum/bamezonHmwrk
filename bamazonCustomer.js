@@ -55,7 +55,7 @@ function displayTable() {
 
 function insertTable() {
   connection.query(query, function (err, res) {
-    if (err) throw err;
+    console.log(res)
     if (table.length > 1){
       table = []
       createTable()

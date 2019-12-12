@@ -5,6 +5,25 @@ var Table = require('cli-table');
 
 var table;
 
+var connection = mysql.createConnection({
+  host: "localhost",
+
+  // Your port; if not 3306
+  port: 3306,
+
+  // Your username
+  user: "root",
+  connectionLimit: 10,
+  // Your password
+  password: "password",
+  database: "bamazon_DB"
+});
+
+connection.connect(function (err) {
+  if (err) throw err;
+  console.log("Database is connected!!");
+});
+
 
 function createTable() {
  table = new Table({
@@ -41,6 +60,7 @@ inquirer
 
     switch(action) {
       case 'View Products for Sale':
+      forSale();
       break;
 
       case 'View Low Inventory':
@@ -50,6 +70,30 @@ inquirer
       break;
 
     }
-
-    console.log(action)
   }
+
+  function forSale() {
+    var query = "SELECT * FROM products WHERE stock_quantity > 0";
+
+    connection.query(query, function (err, res) {
+      if (err) throw err;
+
+      for (var i = 0; i < res.length; i++) {
+        table.push(
+          [res[i].item_id,
+          res[i].product_name,
+          res[i].department_name,
+          res[i].price,
+          res[i].stock_quantity]
+        )
+      
+    }
+    displayTable()
+    })
+  }
+
+  function displayTable() {
+    console.log(table.toString())
+  }
+
+  createTable()
