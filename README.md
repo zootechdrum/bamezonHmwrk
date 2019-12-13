@@ -49,7 +49,7 @@ It made this assigment much easier. I also re-learned some of the important quer
 make in MYSQL. This is something I have not done since I took Colt Steele's course on Udemy.
 
 Here is my LinkedIn.
-
+https://www.linkedin.com/in/cesar-gomez-zootechnic/
 
 
 
