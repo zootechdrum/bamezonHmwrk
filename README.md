@@ -42,6 +42,14 @@ is.
 
 ```
 
+## What I learned
+
+I learned that the NPM package CLI-table produces a beautiful table in the terminal.
+It made this assigment much easier. I also re-learned some of the important queries I can 
+make in MYSQL. This is something I have not done since I took Colt Steele's course on Udemy.
+
+Here is my LinkedIn.
+
 
 
 

@@ -99,7 +99,6 @@ inquirer
   function displayTable() {
     console.log(table.toString())
   }
-
   initTable()
 
   function lowInv(){
