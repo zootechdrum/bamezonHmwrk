@@ -13,7 +13,34 @@ In this project, I be created an Amazon-like storefront with the MySQL,inquirer,
 4. Node.js
 
 ## How to Use
+1. Clone this repo
+2. Run the command `node <file>`
+3. Start ordering or updating inventory
 
+## Code Snippet
+
+The below code is responsible for building a table and then calls on the function 
+appropriatly named disiplayTable to show a visualization of where our current qty
+is.
+
+``` javascript
+  function createTable(insertInfo) {
+    table = [];
+    initTable()
+    for (var i = 0; i < insertInfo.length; i++) {
+      table.push(
+        [insertInfo[i].item_id,
+        insertInfo[i].product_name,
+        insertInfo[i].department_name,
+        insertInfo[i].price,
+        insertInfo[i].stock_quantity]
+      )
+    
+  }
+  displayTable()
+  }
+
+```
 
 
 
