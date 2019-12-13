@@ -72,23 +72,23 @@ function whatToDo() {
 
 function createTable(insertInfo) {
 
-  if (!insertInfo){
+  if (!insertInfo) {
     forSale()
-  }else{
+  } else {
 
-  table = [];
-  initTable()
-  for (var i = 0; i < insertInfo.length; i++) {
-    table.push(
-      [insertInfo[i].item_id,
-      insertInfo[i].product_name,
-      insertInfo[i].department_name,
-      insertInfo[i].price,
-      insertInfo[i].stock_quantity]
-    )
+    table = [];
+    initTable()
+    for (var i = 0; i < insertInfo.length; i++) {
+      table.push(
+        [insertInfo[i].item_id,
+        insertInfo[i].product_name,
+        insertInfo[i].department_name,
+        insertInfo[i].price,
+        insertInfo[i].stock_quantity]
+      )
+    }
+    displayTable()
   }
-  displayTable()
-}
 
 }
 
@@ -120,7 +120,7 @@ function forSale() {
 }
 
 function lowInv() {
-  var query = "Select * from products WHERE stock_quantity < 5";
+  var query = "Select * FROM products WHERE stock_quantity < 5";
 
   connection.query(query, function (err, res) {
     if (err) throw err;
@@ -143,17 +143,25 @@ function addInv() {
       }
     ])
     .then(function (answer) {
-      connection.query("UPDATE products set ? WHERE ?",
-        [
-          {
-            stock_quantity: parseInt(answer.qty)
-          },
-          {
-            product_name: answer.item
-          }
-        ], function(err, res){
-          createTable()
+      connection.query("SELECT stock_quantity FROM products WHERE ?",
+        { product_name: answer.item },
+        function (err, qty) {
+          connection.query("UPDATE products set ? WHERE ?",
+            [
+              {
+                stock_quantity: parseInt(answer.qty) + parseInt(qty[0].stock_quantity)
+              },
+              {
+                product_name: answer.item
+              }
+            ], function (err, res) {
+              console.log(res)
+              createTable()
+            }
+          )
         }
-      )
+      )  
     })
-}
+  }
+
+
