@@ -39,21 +39,37 @@ function initTable() {
 }
 
 inquirer
-  .prompt([
+.prompt({
+  name: "postOrBid",
+  type: "list",
+  message: "Would you like to [POST] an auction or [BID] on an auction?",
+  choices: ["POST", "BID", "EXIT"]
+})
+function whatToDo() {
+inquirer
+  .prompt(
     {
+      pageSize:1,
+      message:"What would you like to do?",
       name : 'action',
       type: 'list',
       choices:[
       'View Products for Sale',
-      'View Low Inventory',
+      new inquirer.Separator(),
+     'View Low Inventory',
+     new inquirer.Separator(),
       'Add to Inventory'
-    ],
-      message: "What would you like to do?"
-    }
-  ])
+    ]
+    
+  })
   .then( function(answer) {
     action(answer.action)
   })
+
+  function displayTable() {
+    console.log(table.toString())
+  }
+}
 
   function createTable(insertInfo) {
     table = [];
@@ -79,6 +95,7 @@ inquirer
       break;
 
       case 'View Low Inventory':
+      lowInv()
       break;
 
       case 'Add to Inventory':
@@ -88,7 +105,7 @@ inquirer
   }
 
   function forSale() {
-    var query = "SELECT * FROM products WHERE stock_quantity > 0";
+    var query = "SELECT * FROM products";
 
     connection.query(query, function (err, res) {
       if (err) throw err;
@@ -96,11 +113,14 @@ inquirer
     })
   }
 
-  function displayTable() {
-    console.log(table.toString())
-  }
-  initTable()
-
   function lowInv(){
-    var query = "Select * from products WHERE stock_quantity < 5"
+    var query = "Select * from products WHERE stock_quantity < 5";
+
+    connection.query(query, function (err, res) {
+      if (err) throw err;
+      createTable(res)
+    })
   }
+
+  
+whatToDo()
