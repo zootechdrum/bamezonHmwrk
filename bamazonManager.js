@@ -22,6 +22,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log("Database is connected!!");
+  whatToDo()
 });
 
 
@@ -38,29 +39,27 @@ function initTable() {
 });
 }
 
-inquirer
-.prompt({
-  name: "postOrBid",
-  type: "list",
-  message: "Would you like to [POST] an auction or [BID] on an auction?",
-  choices: ["POST", "BID", "EXIT"]
-})
+
+function displayTable() {
+  console.log(table.toString())
+}
+
+
+
 function whatToDo() {
 inquirer
-  .prompt(
-    {
-      pageSize:1,
+  .prompt({
       message:"What would you like to do?",
       name : 'action',
       type: 'list',
       choices:[
+        new inquirer.Separator(),
       'View Products for Sale',
       new inquirer.Separator(),
      'View Low Inventory',
      new inquirer.Separator(),
       'Add to Inventory'
     ]
-    
   })
   .then( function(answer) {
     action(answer.action)
@@ -99,6 +98,7 @@ inquirer
       break;
 
       case 'Add to Inventory':
+      addInv();
       break;
 
     }
@@ -122,5 +122,23 @@ inquirer
     })
   }
 
-  
-whatToDo()
+  function addInv() {
+    inquirer
+  .prompt(
+    {
+      message:"What item would you like to update?",
+      name : 'item',
+      type: 'input',    
+  },
+  {
+      message:"Enter Qty",
+      name : 'qty',
+      type: 'input',  
+  }
+
+)
+  .then( function(answer) {
+    action(answer.action)
+  })
+    
+  }
