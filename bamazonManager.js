@@ -27,16 +27,16 @@ connection.connect(function (err) {
 
 
 function initTable() {
- table = new Table({
+  table = new Table({
 
-  chars: {
-    'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
-    , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
-    , 'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼'
-    , 'right': '║', 'right-mid': '╢', 'middle': '│'
-  },
-  head: ['item_id', 'product_name', 'department', 'price', 'quantity']
-});
+    chars: {
+      'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
+      , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
+      , 'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼'
+      , 'right': '║', 'right-mid': '╢', 'middle': '│'
+    },
+    head: ['item_id', 'product_name', 'department', 'price', 'quantity']
+  });
 }
 
 
@@ -47,98 +47,113 @@ function displayTable() {
 
 
 function whatToDo() {
-inquirer
-  .prompt({
-      message:"What would you like to do?",
-      name : 'action',
+  inquirer
+    .prompt({
+      message: "What would you like to do?",
+      name: 'action',
       type: 'list',
-      choices:[
+      choices: [
         new inquirer.Separator(),
-      'View Products for Sale',
-      new inquirer.Separator(),
-     'View Low Inventory',
-     new inquirer.Separator(),
-      'Add to Inventory'
-    ]
-  })
-  .then( function(answer) {
-    action(answer.action)
-  })
+        'View Products for Sale',
+        new inquirer.Separator(),
+        'View Low Inventory',
+        new inquirer.Separator(),
+        'Add to Inventory'
+      ]
+    })
+    .then(function (answer) {
+      action(answer.action)
+    })
 
   function displayTable() {
     console.log(table.toString())
   }
 }
 
-  function createTable(insertInfo) {
-    table = [];
-    initTable()
-    for (var i = 0; i < insertInfo.length; i++) {
-      table.push(
-        [insertInfo[i].item_id,
-        insertInfo[i].product_name,
-        insertInfo[i].department_name,
-        insertInfo[i].price,
-        insertInfo[i].stock_quantity]
-      )
-    
+function createTable(insertInfo) {
+
+  if (!insertInfo){
+    forSale()
+  }else{
+
+  table = [];
+  initTable()
+  for (var i = 0; i < insertInfo.length; i++) {
+    table.push(
+      [insertInfo[i].item_id,
+      insertInfo[i].product_name,
+      insertInfo[i].department_name,
+      insertInfo[i].price,
+      insertInfo[i].stock_quantity]
+    )
   }
   displayTable()
-  }
+}
 
-  function action(action) {
+}
 
-    switch(action) {
-      case 'View Products for Sale':
+function action(action) {
+
+  switch (action) {
+    case 'View Products for Sale':
       forSale();
       break;
 
-      case 'View Low Inventory':
+    case 'View Low Inventory':
       lowInv()
       break;
 
-      case 'Add to Inventory':
+    case 'Add to Inventory':
       addInv();
       break;
 
-    }
   }
+}
 
-  function forSale() {
-    var query = "SELECT * FROM products";
+function forSale() {
+  var query = "SELECT * FROM products";
 
-    connection.query(query, function (err, res) {
-      if (err) throw err;
-      createTable(res)
-    })
-  }
-
-  function lowInv(){
-    var query = "Select * from products WHERE stock_quantity < 5";
-
-    connection.query(query, function (err, res) {
-      if (err) throw err;
-      createTable(res)
-    })
-  }
-
-  function addInv() {
-    inquirer
-  .prompt(
-    {
-      message:"What item would you like to update?",
-      name : 'item',
-      type: 'input',    
-  },
-  {
-      message:"Enter Qty",
-      name : 'qty',
-      type: 'input',  
-  }
-
-)
-  .then( function(answer) {
-    action(answer.action)
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    createTable(res)
   })
-    
-  }
+}
+
+function lowInv() {
+  var query = "Select * from products WHERE stock_quantity < 5";
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    createTable(res)
+  })
+}
+
+function addInv() {
+  inquirer
+    .prompt([
+      {
+        message: "What item would you like to update?",
+        name: 'item',
+        type: 'input',
+      },
+      {
+        message: "Enter Qty",
+        name: 'qty',
+        type: 'input',
+      }
+    ])
+    .then(function (answer) {
+      connection.query("UPDATE products set ? WHERE ?",
+        [
+          {
+            stock_quantity: parseInt(answer.qty)
+          },
+          {
+            product_name: answer.item
+          }
+        ], function(err, res){
+          createTable()
+        }
+      )
+    })
+}
