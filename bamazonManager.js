@@ -25,7 +25,7 @@ connection.connect(function (err) {
   whatToDo()
 });
 
-
+//Formats table
 function initTable() {
   table = new Table({
 
@@ -39,13 +39,13 @@ function initTable() {
   });
 }
 
-
+//displays the table
 function displayTable() {
   console.log(table.toString())
 }
 
 
-
+// Prompts user for action to perform
 function whatToDo() {
   inquirer
     .prompt({
@@ -71,7 +71,7 @@ function whatToDo() {
     console.log(table.toString())
   }
 }
-
+//What should the table show
 function createTable(insertInfo) {
 
   if (!insertInfo) {
@@ -93,7 +93,7 @@ function createTable(insertInfo) {
   }
 
 }
-
+//Performs a different function depending on user choice
 function action(action) {
 
   switch (action) {
@@ -109,13 +109,13 @@ function action(action) {
       addInv();
       break;
 
-      case 'Add Product':
+    case 'Add Product':
       addProd();
       break;
 
   }
 }
-
+//Checks all items for sale
 function forSale() {
   var query = "SELECT * FROM products";
 
@@ -124,7 +124,7 @@ function forSale() {
     createTable(res)
   })
 }
-
+//Check to see the low Inventory
 function lowInv() {
   var query = "Select * FROM products WHERE stock_quantity < 5";
 
@@ -133,7 +133,7 @@ function lowInv() {
     createTable(res)
   })
 }
-
+//Adds to existing inventory
 function addInv() {
   inquirer
     .prompt([
@@ -166,12 +166,13 @@ function addInv() {
             }
           )
         }
-      )  
+      )
     })
-  }
+}
 
-  function addProd() {
-    inquirer
+//Add Products to the table
+function addProd() {
+  inquirer
     .prompt([
       {
         message: "What is the name of the product to add?",
@@ -180,7 +181,7 @@ function addInv() {
       },
       {
         message: "What category should this item be placed in?",
-        name: 'action',
+        name: 'category',
         type: 'list',
         choices: [
           new inquirer.Separator(),
@@ -193,37 +194,29 @@ function addInv() {
       },
       {
         message: "How much does it cost?",
-        name: 'item',
+        name: 'price',
         type: 'input',
       },
       {
         message: "How many do we have?",
-        name: 'item',
+        name: 'qty',
         type: 'input',
       },
     ])
     .then(function (answer) {
       console.log(answer)
-      connection.query("INSERT INTO  stock_quantity FROM products WHERE ?",
-        { product_name: answer.item },
-        function (err, qty) {
-          connection.query("UPDATE products set ? WHERE ?",
-            [
-              {
-                stock_quantity: parseInt(answer.qty) + parseInt(qty[0].stock_quantity)
-              },
-              {
-                product_name: answer.item
-              }
-            ], function (err, res) {
-              console.log(res)
-              createTable()
-            }
-          )
+      connection.query("INSERT INTO products SET ?",
+        [{
+          product_name: answer.item,
+          department_name: answer.category,
+          price: answer.price,
+          stock_quantity: answer.qty
         }
-      )  
+      ]
+      )
+      createTable()
     })
-    
-  }
+
+}
 
 
