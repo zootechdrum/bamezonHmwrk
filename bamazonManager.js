@@ -90,6 +90,7 @@ function createTable(insertInfo) {
       )
     }
     displayTable()
+    whatToDo()
   }
 
 }
@@ -161,7 +162,6 @@ function addInv() {
                 product_name: answer.item
               }
             ], function (err, res) {
-              console.log(res)
               createTable()
             }
           )
@@ -204,7 +204,6 @@ function addProd() {
       },
     ])
     .then(function (answer) {
-      console.log(answer)
       connection.query("INSERT INTO products SET ?",
         [{
           product_name: answer.item,
@@ -212,9 +211,15 @@ function addProd() {
           price: answer.price,
           stock_quantity: answer.qty
         }
-      ]
-      )
-      createTable()
+      ], function(err, res){
+         if (err) throw err;
+         console.log("-----------------------")
+         console.log("-----------------------")
+         console.log("Item added succesfully")
+         console.log("-----------------------")
+         console.log("-----------------------")
+         whatToDo()
+      })
     })
 
 }
