@@ -132,6 +132,7 @@ function lowInv() {
   connection.query(query, function (err, res) {
     if (err) throw err;
     createTable(res)
+    
   })
 }
 //Adds to existing inventory
@@ -218,7 +219,8 @@ function addProd() {
          console.log("Item added succesfully")
          console.log("-----------------------")
          console.log("-----------------------")
-         whatToDo()
+         forSale()
+         
       })
     })
 
