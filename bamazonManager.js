@@ -58,7 +58,9 @@ function whatToDo() {
         new inquirer.Separator(),
         'View Low Inventory',
         new inquirer.Separator(),
-        'Add to Inventory'
+        'Add to Inventory',
+        new inquirer.Separator(),
+        'Add Product'
       ]
     })
     .then(function (answer) {
@@ -105,6 +107,10 @@ function action(action) {
 
     case 'Add to Inventory':
       addInv();
+      break;
+
+      case 'Add Product':
+      addProd();
       break;
 
   }
@@ -162,6 +168,62 @@ function addInv() {
         }
       )  
     })
+  }
+
+  function addProd() {
+    inquirer
+    .prompt([
+      {
+        message: "What is the name of the product to add?",
+        name: 'item',
+        type: 'input',
+      },
+      {
+        message: "What category should this item be placed in?",
+        name: 'action',
+        type: 'list',
+        choices: [
+          new inquirer.Separator(),
+          'Music',
+          new inquirer.Separator(),
+          'Clothing',
+          new inquirer.Separator(),
+          'Toys'
+        ]
+      },
+      {
+        message: "How much does it cost?",
+        name: 'item',
+        type: 'input',
+      },
+      {
+        message: "How many do we have?",
+        name: 'item',
+        type: 'input',
+      },
+    ])
+    .then(function (answer) {
+      console.log(answer)
+      connection.query("INSERT INTO  stock_quantity FROM products WHERE ?",
+        { product_name: answer.item },
+        function (err, qty) {
+          connection.query("UPDATE products set ? WHERE ?",
+            [
+              {
+                stock_quantity: parseInt(answer.qty) + parseInt(qty[0].stock_quantity)
+              },
+              {
+                product_name: answer.item
+              }
+            ], function (err, res) {
+              console.log(res)
+              createTable()
+            }
+          )
+        }
+      )  
+    })
+    
   }
 
 
